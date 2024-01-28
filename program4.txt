@@ -1,0 +1,202 @@
+LAB PROGRAM DBMS 4
+
+ Consider the Insurance database given below. The primary keys are underlined and the data types are specified.
+
+PERSON (DID: STRING, DNAME: STRING, DADDRESS: STRING)
+
+CAR (CREGNO: STRING, CMODEL: STRING, CYEAR: INT)
+
+ACCIDENT (REPNO: INT, REPDATE: DATE, LOCATION: STRING)
+
+OWNS (DID: STRING. CREGNO: STRING)
+
+PARTICIPATED (DID: STRING, CREGNO: STRING, REPNO:INT, DAMAGEAMT: INT)
+
+QUESTIONS
+
+(A) Create the above tables by properly specifying the primary keys and the foreign keys.
+
+(B) Enter at least five tuples for each relation.
+
+(C) View the Tables
+
+(D) Demonstrate how you
+
+a. Update the damage amount for the car with a specific Regno in the accident with report number 1 to 3.
+
+b. Add a new accident to the Accident Table.
+
+(D) Find the total number of people who owned cars that were involved in accidents in 2018
+
+(F) Find the number of accidents in which cars belonging to a specific model were involved.
+
+ANSWERS
+
+A) Create the above tables by properly specifying the primary keys and the foreign keys.
+
+SQL> CREATE TABLE PERSON(
+
+2 DID VARCHAR2(20) PRIMARY KEY,
+
+3 DNAME VARCHAR2(20),
+
+4 DADDRESS VARCHAR2(20));
+
+Table created.
+
+SQL> CREATE TABLE CAR (
+
+2 CREGNO VARCHAR2(20) PRIMARY KEY,
+
+3 CMODEL VARCHAR2(20),
+
+4 CYEAR NUMBER(10));
+
+Table created.
+
+SQL> CREATE TABLE ACCIDENT(
+
+2 REPNO NUMBER(10) PRIMARY KEY,
+
+3 REPDATE DATE,
+
+4 LOCATION VARCHAR2(20));
+
+Table created.
+
+2 DID VARCHAR2(20) REFERENCES PERSON PRIMARY KEY,
+
+SQL> CREATE TABLE OWNS(
+
+3 CREGNO VARCHAR2(20) REFERENCES CAR);
+
+Table created.
+
+SQL> CREATE TABLE PARTICIPATED
+
+2 DID VARCHAR2(20) REFERENCES PERSON PRIMARY KEY,
+
+3 CREGNO VARCHAR2(20) REFERENCES CAR,
+
+4 REPNO NUMBER (10) REFERENCES ACCIDENT,
+
+5 DAMAGEAMT NUMBER(10));
+
+Table created.
+
+
+B) Enter at least five tuples for each relation.
+
+SQL> INSERT INTO PERSON VALUES('&DID', '&DNAME', '&DADDRESS');
+
+Enter value for did: D-101
+
+Enter value for dname: HARSHA
+
+Enter value for daddress: BANGALORE
+
+1 row created.
+
+SQL> INSERT INTO CAR VALUES('&CREGNO', '&CMODEL', '&CYEAR');
+
+Enter value for cregno: KA-47-01
+
+Enter value for cmodel: SWIFT
+
+Enter value for cvear: 2001
+
+1 row created.
+
+SQL> INSERT INTO ACCIDENT VALUES(&REPNO, '&REPDATE', '&LOCATION');
+
+Enter value for repno: 1
+
+Enter value for repdate: 01-JAN-18
+
+Enter value for location: BANGALORE
+
+1 row created.
+
+
+SQL> INSERT INTO OWNS VALUES('&DID', '&CREGNO');
+
+Enter value for did: D-101
+
+Enter value for cregno: KA-47-01
+
+1 row created.
+
+SQL> INSERT INTO PARTICIPATED VALUES('&DID', '&CREGNO', &REPNO, &DAMAGEAMT);
+
+Enter value for did: D-101
+
+Enter value for cregno: KA-47-01
+
+Enter value for repno: 1
+
+Enter value for damageamt: 1000
+
+1 row created..
+
+
+C) View the Tables.
+
+SQL> SELECT FROM PERSON;
+
+SQL> SELECT FROM CAR;
+
+SQL> SELECT FROM ACCIDENT;
+
+SQL> SELECT FROM OWNS;
+
+SQL> SELECT FROM PARTICIPATED;
+
+
+D) Demonstrate How You
+
+i) Update Damage amount For The Car Of a Specific Regno In Accident Table With Report no 1 To 3
+
+Sql> UPDATE PARTICIPATED SET DAMAGEAMT-25000
+
+ WHERE
+
+CREGNO-KA-47-03
+
+AND
+
+REPNO BETWEEN 1 AND 4;
+
+SQL> SELECT FROM PARTICIPATED;
+
+
+ii) add a new accident to the database
+
+SQL> INSERT INTO ACCIDENT VALUES(6,01-JUN-2022', 'BELAGAVI');
+
+SOL> SELECT FROM ACCIDENT;
+
+
+E) find the total number of people whose owned cars were involved in accidents in 2018.
+
+SQL> SELECT COUNT(DID) FROM ACCIDENT, PARTICIPATED
+
+ WHERE
+
+ REPDATE BETWEEN 01-JAN-18 AND 31-DEC-18' AND
+
+ ACCIDENT.REPNO-PARTICIPATED.REPNO;
+
+
+F) find the number of accidents in which cars belonging to a specific model were involved.
+
+SQL> SELECT FROM CAR;
+
+SQL> SELECT COUNT(CMODEL) FROM ACCIDENT, PARTICIPATED, CAR
+
+ WHERE
+
+ACCIDENT.REPNO-PARTICIPATED.REPNO
+
+ AND CAR.CREGND-PARTICIPATED.CREGNO
+
+AND CAR.MODEL = " NANO";

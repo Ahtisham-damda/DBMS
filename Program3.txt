@@ -1,0 +1,73 @@
+Program 3
+
+Consider the following schema for Order Database: 
+SALESMAN (Salesman id, Name, City, Commission)
+CUSTOMER (Customer id, Cust Name, City, Grade, Salesman_id) 
+ORDERS   (Ord No. Purchase Amt, Ord Date, Customer_id, Salesman_id)
+
+Write SQL queries to
+
+1. Count the customers with grades above Bangalore's average.
+
+2. Find the name and numbers of all salesmen who had more than one customer.
+
+3. List all salesmen and indicate those who have and don't have customers in their cities (Use UNION operation.)
+
+4. Create a view that finds the salesman who has the customer with the highest order of a day.
+
+5. Demonstrate the DELETE operation by removing salesman with id 101 All his orders must also be deleted.
+
+
+Table Creation
+
+CREATE TABLE SALESMAN ( SALESMAN ID INT (4) PRIMARY KEY, NAME VARCHAR (20), CITY VARCHAR (20), COMMISSION VARCHAR (20));
+
+CREATE TABLE CUSTOMER CUSTOMER ID INT (5) PRIMARY KEY, CUST NAME VARCHAR (20), CITY VARCHAR (20), GRADE INT (4).
+
+SALESMAN ID INT (6), FOREIGN KEY (SALESMAN ID) REFERENCES SALESMAN (SALESMAN_ID) ON DELETE SET NULL);
+
+CREATE TABLE ORDERS (
+
+ORD NO INT (5) PRIMARY KEY, PURCHASE AMT DECIMAL (10, 2), ORD DATE DATE, CUSTOMER ID INT (4), SALESMAN ID INT (4), FOREIGN KEY (CUSTOMER ID) REFERENCES CUSTOMER (CUSTOMER ID) ON DELETE CASCADE, FOREIGN KEY (SALESMAN_ID) REFERENCES SALESMAN (SALESMAN_ID) ON DELETE CASCADE),
+
+
+INSERT INTO SALESMAN VALUES(101,'RICHARD', 'LOS ANGELES','18%');
+
+INSERT INTO CUSTOMER VALUES(501, 'SMITH', 'LOS ANGELES', 10,103);
+
+INSERT INTO ORDERS VALUES(1,1000, 2017-05-04',501,103);
+
+
+1. Count the customers with grades above Bangalore's average
+
+sql> SELECT GRADE, COUNT (CUSTOMER_ID) FROM CUSTOMER GROUP BY GRADE HAVING GRADE (SELECT AVG (GRADE) FROM CUSTOMER WHERE CITY='BANGALORE');
+
+2. Find the name and numbers of all salesmen who had more than one customer
+
+sql>SELECT SALESMAN_ID,NAME FROM SALESMAN A WHERE 1 (SELECT COUNT(*) FROM CUSTOMER WHERE SALESMAN ID-A.SALESMAN ID)
+
+OR
+
+sql>SELECT S.SALESMAN ID, NAME, FROM CUSTOMER C,SALESMAN S WHERE S.SALESMAN ID-C.SALESMAN ID GROUP BY C.SALESMAN ID HAVING COUNT(*)>1;
+
+3. List all salesmen and indicate those who have and don't have customers in their cities (Use UNION operation.)
+
+sql>SELECT S.SALESMAN_ID,NAME,CUST_NAME,COMMISSION FROM SALESMAN S.CUSTOMER C WHERE S.CITY-C.CITY UNION
+
+sql>SELECT SALESMAN ID, NAME, NO MATCH.COMMISSION FROM SALESMAN WHERE NOT CITY ANY (SELECT CITY FROM CUSTOMER) ORDER BY 2 DESC;
+
+
+4. Create a view that finds the salesman who has the customer with the highest order of a day.
+
+CREATE VIEW VW ELITSALESMAN AS SELECT BORD DATE.A.SALESMAN ID.A.NAME FROM SALESMAN A. ORDERS B WHERE A.SALESMAN ID = B.SALESMAN ID AND B.PURCHASE AMT (SELECT MAX(PURCHASE AMT) FROM ORDERS C WHERE CORD DATE B.ORD DATE);
+
+
+SELECT FROM VW ELITSALESMAN;
+
+5. Demonstrate the DELETE operation by removing salesman with id 101. All his orders
+
+must also be deleted.
+
+Use ON DELETE CASCADE at the end of foreign key definitions while creating child table orders and then execute the following:
+
+sql>DELETE FROM SALESMAN WHERE SALESMAN ID=101;
